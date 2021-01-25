@@ -24,10 +24,15 @@ namespace Client
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+	        Host.CreateDefaultBuilder(args)
+		        .ConfigureAppConfiguration((context, config) =>
+		        {
+			        if (context.HostingEnvironment.EnvironmentName != "Offline")
+				        config.AddAzureKeyVaultSupport();
+		        })
+		        .ConfigureWebHostDefaults(webBuilder =>
+		        {
+			        webBuilder.UseStartup<Startup>();
+		        });
     }
 }
