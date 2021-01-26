@@ -39,8 +39,11 @@ namespace IdentityService
 
             var builder = services.AddIdentityServer(options =>
 	            {
-
-	            }).AddTestUsers(TestUsers.Users)
+		            options.Events.RaiseErrorEvents = true;
+		            options.Events.RaiseFailureEvents = true;
+		            options.Events.RaiseInformationEvents = true;
+		            options.Events.RaiseSuccessEvents = true;
+				}).AddTestUsers(TestUsers.Users)
 	            .AddInMemoryIdentityResources(Config.IdentityResources)
 	            .AddInMemoryApiScopes(Config.ApiScopes)
 	            .AddInMemoryClients(Config.Clients);
