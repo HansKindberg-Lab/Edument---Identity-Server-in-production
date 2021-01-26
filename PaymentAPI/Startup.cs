@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,12 @@ namespace PaymentAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+	        services.AddHsts(opts =>
+	        {
+		        opts.IncludeSubDomains = true;
+		        opts.MaxAge = TimeSpan.FromSeconds(15768000);
+	        });
+
             services.AddControllersWithViews();
         }
 
@@ -37,6 +44,14 @@ namespace PaymentAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+	            app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseSecurityHeaders();
 
             app.UseRouting();
 
