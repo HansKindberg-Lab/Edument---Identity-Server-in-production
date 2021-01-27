@@ -62,9 +62,10 @@ namespace IdentityService
 	        else
 	        {
 		        app.UseHsts();
+		        app.UseExceptionHandler("/Home/Error");
 	        }
 
-	        app.UseHttpsRedirection();
+			app.UseHttpsRedirection();
 	        app.UseSecurityHeaders();
 
 	        app.UseRequestLocalization(new RequestLocalizationOptions().SetDefaultCulture("se-SE"));
