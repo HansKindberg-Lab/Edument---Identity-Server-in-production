@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityModel;
 using Infrastructure;
+using Infrastructure.DataProtection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -62,8 +63,11 @@ namespace Client
 			        };
 				}
 	        );
-            
-            services.AddHsts(opts =>
+
+	        if (_environment.EnvironmentName != "Offline")
+		        services.AddDataProtectionWithSqlServer(_configuration);
+
+			services.AddHsts(opts =>
 	        {
 		        opts.IncludeSubDomains = true;
 		        opts.MaxAge = TimeSpan.FromSeconds(15768000);
