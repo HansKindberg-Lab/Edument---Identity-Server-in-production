@@ -65,7 +65,7 @@ namespace Client
 	        );
 
 	        if (_environment.EnvironmentName != "Offline")
-		        services.AddDataProtectionWithSqlServer(_configuration);
+		        services.AddDataProtectionWithSqlServerForClient(_configuration);
 
 			services.AddHsts(opts =>
 	        {
