@@ -1,10 +1,10 @@
-﻿using Duende.IdentityServer;
+﻿using System.Collections.Generic;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
-using System.Collections.Generic;
 
-namespace IdentityService.Configuration
+namespace IdentityService.Configuration.Clients
 {
-    public class Clients
+    public class ClientData
     {
         public static IEnumerable<Client> GetClients()
         {
@@ -58,6 +58,7 @@ namespace IdentityService.Configuration
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Phone,
+                    IdentityServerConstants.StandardScopes.OfflineAccess
                 },
 
                 AllowedCorsOrigins =
@@ -115,19 +116,21 @@ namespace IdentityService.Configuration
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Phone,
+                    IdentityServerConstants.StandardScopes.OfflineAccess
                 },
-                
+
                 AllowedCorsOrigins =
                 {
                     "https://student2-client.webapi.se"
                 }
             };
-            
-            return new List<Client>()
+
+            return new List<Client>
             {
                 clientDev,
                 clientProd
             };
         }
+
     }
 }
