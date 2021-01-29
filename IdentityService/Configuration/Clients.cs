@@ -38,7 +38,8 @@ namespace IdentityService.Configuration
 
                 RedirectUris =
                 {
-                    "https://localhost:5001/signin-oidc"
+                    "https://localhost:5001/signin-oidc",
+                    "https://localhost:5002/signin-oidc"
                 },
 
                 PostLogoutRedirectUris =
