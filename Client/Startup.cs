@@ -53,6 +53,8 @@ namespace Client
 			        options.Scope.Add("openid");
 			        options.Scope.Add("profile");
 			        options.Scope.Add("email");
+			        options.Scope.Add("employee");
+			        options.Scope.Add("payment");
 					options.Scope.Add("offline_access");
 			        options.GetClaimsFromUserInfoEndpoint = true;
 			        options.SaveTokens = true;
@@ -68,6 +70,15 @@ namespace Client
 
 	        if (_environment.EnvironmentName != "Offline")
 		        services.AddDataProtectionWithSqlServerForClient(_configuration);
+
+	        services.AddTransient<SerilogHttpMessageHandler>();
+
+			services.AddHttpClient("paymentapi", client =>
+	        {
+		        client.BaseAddress = new Uri(_configuration["paymentApiUrl"]);
+		        client.Timeout = TimeSpan.FromSeconds(5);
+		        client.DefaultRequestHeaders.Add("Accept", "application/json");
+	        }).AddHttpMessageHandler<SerilogHttpMessageHandler>();
 
 			services.AddHsts(opts =>
 	        {
