@@ -14,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using PaymentAPI.Middleware;
 
 namespace PaymentAPI
 {
@@ -34,7 +36,12 @@ namespace PaymentAPI
 	        if (_environment.EnvironmentName != "Offline")
 		        services.AddDataProtectionWithSqlServerForPaymentApi(_configuration);
 
-	        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+	        //Add the listener to the ETW system
+	        var listener = new IdentityModelEventListener();
+	        IdentityModelEventSource.Logger.LogLevel = System.Diagnostics.Tracing.EventLevel.Verbose;
+            IdentityModelEventSource.ShowPII = true;
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 	        JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,7 +49,9 @@ namespace PaymentAPI
 		        {
 			        opt.Authority = _configuration["openid:authority"];
 			        opt.Audience = "paymentapi";
-			        opt.TokenValidationParameters.RoleClaimType = "roles";
+			        opt.BackchannelHttpHandler = new BackChannelListener();
+			        opt.BackchannelTimeout = TimeSpan.FromSeconds(5);
+                    opt.TokenValidationParameters.RoleClaimType = "roles";
 			        opt.TokenValidationParameters.NameClaimType = "name";
                     opt.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(60);
 			        // IdentityServer emits a type header by default, recommended extra check
@@ -70,6 +79,9 @@ namespace PaymentAPI
 		        app.UseHsts();
 		        app.UseExceptionHandler("/Home/Error");
 	        }
+
+	        app.UseWaitForIdentityServer(new WaitForIdentityServerOptions()
+		        { Authority = _configuration["openid:authority"] });
 
             app.UseHttpsRedirection();
 

@@ -44,6 +44,8 @@ namespace Client
 		        {
 					options.AccessDeniedPath = "/User/AccessDenied";
 					options.Authority = _configuration["openid:authority"];
+					options.BackchannelHttpHandler = new BackChannelListener();
+					options.BackchannelTimeout = TimeSpan.FromSeconds(5);
 					options.ClientId = _configuration["openid:clientid"];
 					options.ClientSecret = "mysecret";
 			        options.ResponseType = "code";
