@@ -90,6 +90,8 @@ namespace IdentityService.Configuration.Clients
                 AllowAccessTokensViaBrowser = false,
 
                 AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                AccessTokenLifetime = 45,
 
                 AllowedScopes =
                     {

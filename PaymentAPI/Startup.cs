@@ -53,7 +53,7 @@ namespace PaymentAPI
 			        opt.BackchannelTimeout = TimeSpan.FromSeconds(5);
                     opt.TokenValidationParameters.RoleClaimType = "roles";
 			        opt.TokenValidationParameters.NameClaimType = "name";
-                    opt.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(60);
+                    opt.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(0);
 			        // IdentityServer emits a type header by default, recommended extra check
 			        opt.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
 		        });
