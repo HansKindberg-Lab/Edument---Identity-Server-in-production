@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure;
 using Infrastructure.DataProtection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +33,21 @@ namespace PaymentAPI
         {
 	        if (_environment.EnvironmentName != "Offline")
 		        services.AddDataProtectionWithSqlServerForPaymentApi(_configuration);
+
+	        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+	        JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		        .AddJwtBearer(opt =>
+		        {
+			        opt.Authority = _configuration["openid:authority"];
+			        opt.Audience = "paymentapi";
+			        opt.TokenValidationParameters.RoleClaimType = "roles";
+			        opt.TokenValidationParameters.NameClaimType = "name";
+                    opt.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(60);
+			        // IdentityServer emits a type header by default, recommended extra check
+			        opt.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+		        });
 
             services.AddHsts(opts =>
 	        {
@@ -64,6 +81,7 @@ namespace PaymentAPI
 	            new RequestLocalizationOptions()
 		            .SetDefaultCulture("se-SE"));
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
