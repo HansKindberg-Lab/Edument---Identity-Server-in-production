@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using SessionStore;
 
 namespace Client
 {
@@ -39,7 +40,8 @@ namespace Client
 		        {
 			        options.LogoutPath = "/User/Logout";
 			        options.AccessDeniedPath = "/User/AccessDenied";
-                }
+			        //options.SessionStore = new MySessionStore();
+				}
 	        ).AddOpenIdConnect(options =>
 		        {
 					options.AccessDeniedPath = "/User/AccessDenied";
